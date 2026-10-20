@@ -23,15 +23,31 @@ export function startOfWeek(d: Date, weekStartsOn: number): Date {
   return addDays(d, -diff);
 }
 
-/** Dias seguidos com estudo, terminando hoje (ou ontem, se hoje ainda não houve estudo). */
-export function dayStreak(days: Set<string>, today = new Date()): number {
-  let cursor = days.has(dayKey(today)) ? today : addDays(today, -1);
-  let count = 0;
-  while (days.has(dayKey(cursor))) {
-    count++;
-    cursor = addDays(cursor, -1);
+/** Pausa máxima (dias sem estudo) que ainda mantém a sequência de estudos. */
+export const MAX_PAUSE_DAYS = 3;
+
+const DAY_MS = 86_400_000;
+const daysBetween = (a: string, b: string) =>
+  Math.round((new Date(`${b}T00:00`).getTime() - new Date(`${a}T00:00`).getTime()) / DAY_MS);
+
+/** Quebra a lista ordenada de dias de estudo em sequências (pausas de até MAX_PAUSE_DAYS não quebram). */
+function studyRuns(days: Set<string>): string[][] {
+  const sorted = [...days].sort();
+  const runs: string[][] = [];
+  for (const d of sorted) {
+    const run = runs.at(-1);
+    if (run && daysBetween(run.at(-1)!, d) - 1 <= MAX_PAUSE_DAYS) run.push(d);
+    else runs.push([d]);
   }
-  return count;
+  return runs;
+}
+
+/** Estudos seguidos: dias de estudo na sequência atual (zera após mais de MAX_PAUSE_DAYS dias sem estudar). */
+export function studyStreak(days: Set<string>, today = new Date()): number {
+  const last = studyRuns(days).at(-1);
+  if (!last) return 0;
+  // O dia de hoje ainda não acabou: só conta como pausa a partir de amanhã.
+  return daysBetween(last.at(-1)!, dayKey(today)) - 1 <= MAX_PAUSE_DAYS ? last.length : 0;
 }
 
 /** Semanas seguidas com pelo menos um dia de estudo (a semana atual conta se já houve estudo). */
@@ -60,15 +76,7 @@ export function monthGrid(year: number, month: number, weekStartsOn: number): Da
   return cells;
 }
 
-/** Maior sequência de dias seguidos com estudo. */
-export function longestDayStreak(days: Set<string>): number {
-  let best = 0;
-  for (const d of days) {
-    const date = new Date(`${d}T00:00`);
-    if (days.has(dayKey(addDays(date, -1)))) continue; // só conta a partir do início de cada sequência
-    let n = 1;
-    while (days.has(dayKey(addDays(date, n)))) n++;
-    best = Math.max(best, n);
-  }
-  return best;
+/** Maior sequência de estudos já feita (mesma regra de pausa). */
+export function longestStudyStreak(days: Set<string>): number {
+  return Math.max(0, ...studyRuns(days).map((r) => r.length));
 }

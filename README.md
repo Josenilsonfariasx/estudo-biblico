@@ -6,7 +6,7 @@ Next.js + Prisma + PostgreSQL, publicado com Docker no Easypanel.
 ## O que o app faz
 
 - **Hoje:** próxima leitura de cada trilha (marcar como lido com um toque), "Começar encontro"
-  (trilha principal → trilha paralela), versículo da semana, dias e semanas seguidas e calendário
+  (trilha principal → trilha paralela), versículo da semana, estudos seguidos (a sequência aguenta pausas de até 3 dias), semanas seguidas e calendário
   com os dias estudados. Toque num dia para ver o que foi lido.
 - **Plano:** trilhas e fases com progresso; capítulos com checkbox; tudo editável
   (trilhas, fases e blocos de livros/capítulos). O plano padrão é carregado sozinho na primeira vez.

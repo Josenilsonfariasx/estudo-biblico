@@ -8,7 +8,7 @@ import { Avatar } from "@/components/Avatar";
 import { LampIcon } from "@/components/LampIcon";
 import { StudyCalendar } from "@/components/StudyCalendar";
 import { Loading, ReadCheck } from "@/components/ui";
-import { addDays, dayKey, dayStreak, startOfWeek, weekStreak } from "@/lib/dates";
+import { MAX_PAUSE_DAYS, addDays, dayKey, startOfWeek, studyStreak, weekStreak } from "@/lib/dates";
 import { local } from "@/lib/local-db";
 import { chapterLabel, usePlan, useProfile, useStudiedDays } from "@/lib/plan";
 import { reviewId, setRead } from "@/lib/store";
@@ -142,10 +142,10 @@ export function TodayView() {
       )}
 
       <section className={styles.stats}>
-        <div className={`card ${styles.stat}`}>
+        <div className={`card ${styles.stat}`} title={`A sequência continua com pausas de até ${MAX_PAUSE_DAYS} dias`}>
           <Flame size={18} />
-          <strong>{dayStreak(studiedDays, now)}</strong>
-          <span className="soft">dias seguidos</span>
+          <strong>{studyStreak(studiedDays, now)}</strong>
+          <span className="soft">estudos seguidos</span>
         </div>
         <div className={`card ${styles.stat}`}>
           <CalendarDays size={18} />

@@ -18,7 +18,7 @@ import {
 import { Avatar } from "@/components/Avatar";
 import { Loading, PageHeader, SavedField, Segmented } from "@/components/ui";
 import { exportJson, exportMarkdown, importJson } from "@/lib/backup";
-import { longestDayStreak } from "@/lib/dates";
+import { longestStudyStreak } from "@/lib/dates";
 import { local } from "@/lib/local-db";
 import { DEFAULT_PROFILE, hasContent, usePlan, useProfile, useStudiedDays } from "@/lib/plan";
 import { put } from "@/lib/store";
@@ -63,7 +63,7 @@ export function MoreView() {
   const stats = [
     { label: "capítulos lidos", value: `${read}/${total}` },
     { label: "dias de estudo", value: studiedDays.size },
-    { label: "maior sequência (dias)", value: longestDayStreak(studiedDays) },
+    { label: "maior sequência de estudos", value: longestStudyStreak(studiedDays) },
     { label: "anotações", value: notes.filter((n) => hasContent(n)).length },
     { label: "sementes", value: notes.filter((n) => n.isSeed && !n.deletedAt).length },
     { label: "revisões", value: reviews.filter((r) => r.completedAt && !r.deletedAt).length },
