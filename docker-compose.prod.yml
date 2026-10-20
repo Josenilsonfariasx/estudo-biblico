@@ -1,0 +1,13 @@
+# Produção local: a mesma imagem que vai para o Easypanel, sem banco próprio.
+# Lê o DATABASE_URL de .env.docker-prod (veja .env.docker-prod.example).
+# Uso: npm run docker:prod
+name: lampada-prod
+
+services:
+  app:
+    build: .
+    env_file: .env.docker-prod
+    ports:
+      - "${PROD_PORT:-3001}:3000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

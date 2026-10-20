@@ -1,0 +1,52 @@
+.readDone {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  color: var(--success);
+  font-weight: 500;
+}
+
+.encounter {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.encounter :global(.grow) {
+  display: flex;
+  flex-direction: column;
+}
+
+.encounter strong {
+  color: var(--text);
+  font-family: var(--font-serif);
+  font-size: 18px;
+}
+
+.seedToggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 0 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  color: var(--text-soft);
+  text-align: left;
+}
+
+.seedOn {
+  border-color: var(--seed);
+  color: var(--seed);
+  background: color-mix(in srgb, var(--seed) 10%, transparent);
+  font-weight: 500;
+}
+
+.pager {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}

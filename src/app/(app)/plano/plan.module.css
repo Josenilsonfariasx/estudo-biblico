@@ -1,0 +1,26 @@
+.phase {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.phase h3 {
+  font-size: 16px;
+}
+
+.phaseNumber {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--primary) 12%, transparent);
+  color: var(--primary);
+  font-family: var(--font-serif);
+  font-weight: 600;
+}
+
+.editBox {
+  border-style: dashed;
+}

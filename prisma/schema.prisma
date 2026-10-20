@@ -1,0 +1,148 @@
+// Lâmpada — esquema do banco.
+// Sincronização offline:
+// - IDs são gerados no cliente (ou fixos, no plano padrão), então criar registros offline não duplica nada.
+// - `modifiedAt` é a hora da edição no aparelho: vale a última edição.
+// - `updatedAt` é a hora em que o servidor gravou: os aparelhos buscam o que mudou desde a última sincronização.
+// - Nada é apagado de fato: `deletedAt` marca a exclusão para ela chegar aos outros aparelhos.
+// - Sem chaves estrangeiras, para a ordem de chegada dos registros não importar.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// Perfil e preferências do único usuário (sempre id = "me").
+model Profile {
+  id           String    @id
+  displayName  String    @default("")
+  photo        String? // data URL de uma imagem pequena (já reduzida no celular)
+  weekStartsOn Int       @default(1) // 0 = domingo, 1 = segunda
+  modifiedAt   DateTime
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
+
+  @@index([updatedAt])
+}
+
+/// Trilha de leitura (ex.: principal, paralela). O usuário pode criar outras.
+model Track {
+  id         String    @id
+  name       String
+  order      Int
+  modifiedAt DateTime
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime?
+
+  @@index([updatedAt])
+}
+
+model Phase {
+  id          String    @id
+  trackId     String
+  name        String
+  description String    @default("")
+  order       Int
+  modifiedAt  DateTime
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  @@index([updatedAt])
+}
+
+/// Bloco de capítulos de um livro (ex.: Marcos 1–16).
+model Block {
+  id         String    @id
+  phaseId    String
+  book       String
+  fromCh     Int
+  toCh       Int
+  order      Int
+  modifiedAt DateTime
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime?
+
+  @@index([updatedAt])
+}
+
+model Chapter {
+  id         String    @id // "<blockId>:<número>"
+  blockId    String
+  book       String
+  number     Int
+  page       String    @default("") // página na Bíblia física (ex.: "NT 25")
+  readAt     DateTime? // null = não lido
+  modifiedAt DateTime
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime?
+
+  @@index([updatedAt])
+}
+
+/// Anotação de um capítulo (id = "n:<chapterId>", uma por capítulo).
+model Note {
+  id         String    @id
+  chapterId  String
+  verse      String    @default("")
+  summary    String    @default("")
+  learned    String    @default("")
+  apply      String    @default("")
+  questions  String    @default("")
+  isSeed     Boolean   @default(false)
+  seedIdea   String    @default("")
+  createdAt  DateTime
+  modifiedAt DateTime
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime?
+
+  @@index([updatedAt])
+}
+
+/// Revisão semanal (id = "rv:<AAAA-MM-DD do início da semana>").
+model Review {
+  id          String    @id
+  weekStart   String
+  verse       String    @default("")
+  verseRef    String    @default("")
+  reflection  String    @default("")
+  completedAt DateTime?
+  modifiedAt  DateTime
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  @@index([updatedAt])
+}
+
+/// Mensagem (pregação) com a estrutura de 7 partes.
+model Message {
+  id          String    @id
+  noteId      String?
+  title       String    @default("")
+  baseText    String    @default("")
+  context     String    @default("")
+  centralIdea String    @default("")
+  points      String    @default("")
+  example     String    @default("")
+  application String    @default("")
+  prayer      String    @default("")
+  status      String    @default("draft") // draft | ready | preached
+  preachedAt  String? // AAAA-MM-DD
+  createdAt   DateTime
+  modifiedAt  DateTime
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  @@index([updatedAt])
+}
+
+/// Tentativas de login, para o bloqueio após erros seguidos.
+model LoginAttempt {
+  id        Int      @id @default(autoincrement())
+  ok        Boolean
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+}

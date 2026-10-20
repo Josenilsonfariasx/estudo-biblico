@@ -1,0 +1,84 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.verseCard {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.verseIcon {
+  color: var(--gold);
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 12px;
+  color: var(--text-soft);
+}
+
+.stat strong {
+  font-family: var(--font-serif);
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.1;
+  color: var(--text);
+}
+
+.stat span {
+  font-size: 12px;
+}
+
+.next {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.nextRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 52px;
+  border-bottom: 1px solid var(--border);
+}
+
+.nextRow strong {
+  font-weight: 500;
+}
+
+.next :global(.btn) {
+  margin-top: 4px;
+}
+
+.reviewHint {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--gold);
+}
+
+.reviewHint strong {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.dayList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}

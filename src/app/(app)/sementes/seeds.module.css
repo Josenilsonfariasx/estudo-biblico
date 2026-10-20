@@ -1,0 +1,54 @@
+.search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 14px;
+  min-height: 44px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-soft);
+}
+
+.search input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: none;
+  color: var(--text);
+  font: inherit;
+  font-size: 16px;
+  outline: none;
+}
+
+.seed {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-left: 4px solid var(--seed);
+}
+
+.seed h3 {
+  font-size: 16px;
+}
+
+.seed :global(.btn) {
+  align-self: flex-start;
+}
+
+.msgTitle {
+  display: block;
+  font-weight: 500;
+}
+
+.msgTitle + span {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.preached {
+  border-color: var(--success);
+  color: var(--success);
+}

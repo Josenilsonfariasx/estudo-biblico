@@ -1,0 +1,43 @@
+# Desenvolvimento: Postgres local + Next em modo dev com hot reload.
+# Uso: npm run docker:dev
+name: lampada-dev
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: lampada
+      POSTGRES_PASSWORD: lampada
+      POSTGRES_DB: lampada
+    ports:
+      - "${DB_PORT:-5432}:5432" # acesso pelo DBeaver etc.
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lampada -d lampada"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  app:
+    image: node:22-alpine
+    working_dir: /app
+    command: sh -c "apk add --no-cache openssl >/dev/null && npm install --no-fund --no-audit && npx prisma migrate deploy && npx next dev --turbopack -H 0.0.0.0"
+    environment:
+      DATABASE_URL: postgresql://lampada:lampada@db:5432/lampada?schema=public
+      NEXT_TELEMETRY_DISABLED: "1"
+    ports:
+      - "${APP_PORT:-3000}:3000"
+    volumes:
+      - .:/app
+      # node_modules e .next do container ficam separados dos do WSL (binários diferentes).
+      - node-modules:/app/node_modules
+      - next-cache:/app/.next
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  db-data:
+  node-modules:
+  next-cache:
